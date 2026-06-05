@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofitsiant paneli | Restoran</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f0ede8; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { background: #6b3e1c; color: white; padding: 20px; border-radius: 30px; text-align: center; margin-bottom: 25px; }
+        .order-card { background: white; border-radius: 25px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 8px solid #e67e22; }
+        .order-type { font-weight: bold; color: #e67e22; margin-bottom: 8px; }
+        .badge { background: #e67e22; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; display: inline-block; margin-top: 8px; }
+        button { background: #27ae60; color: white; border: none; padding: 8px 16px; border-radius: 50px; margin-top: 10px; cursor: pointer; }
+        .refresh { background: #3498db; width: 100%; padding: 12px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header"><h1>👨‍🍳 Ofitsiant paneli</h1><p>Yangi buyurtmalar real vaqtda</p></div>
+    <button class="refresh" id="refreshBtn">🔄 Yangilash</button>
+    <div id="ordersList"></div>
+</div>
+<script>
+    const REPO_OWNER = "ilmyolida";
+    const REPO_NAME = "Restaurants";
+    async function loadOrders() {
+        const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/orders.json`;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error();
+            const orders = await res.json();
+            const container = document.getElementById("ordersList");
+            container.innerHTML = orders.length ? "" : "<p style='text-align:center'>Hozircha buyurtma yo‘q</p>";
+            orders.slice().reverse().forEach(o => {
+                if (o.type === "delivery") container.innerHTML += `<div class="order-card"><div class="order-type">🚚 Yetkazib berish</div><div><strong>${o.name}</strong> | ${o.phone}</div><div>🍽 ${o.product} x${o.qty} = ${o.total} сом</div><div>📍 ${o.address}</div><div class="badge">${new Date(o.date).toLocaleString()}</div></div>`;
+                else container.innerHTML += `<div class="order-card"><div class="order-type">🪑 Stol band qilish</div><div><strong>${o.name}</strong> | ${o.phone}</div><div>🪑 Stol ${o.table} | 👥 ${o.guests} kishi</div><div>📅 ${o.dateTime}</div><div class="badge">Yangi</div></div>`;
+            });
+        } catch(e) { document.getElementById("ordersList").innerHTML = "<p>Xatolik</p>"; }
+    }
+    document.getElementById("refreshBtn").onclick = () => loadOrders();
+    loadOrders();
+    setInterval(loadOrders, 15000);
+</script>
+</body>
+</html>
