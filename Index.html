@@ -1,202 +1,320 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="ky">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Restoran | Menyu va Buyurtma</title>
+    <title>Restoran | Меню жана Заказ</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Poppins', 'Segoe UI', sans-serif;
-            background: linear-gradient(145deg, #fef8ed 0%, #f9efdf 100%);
+            font-family: 'Poppins', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
             min-height: 100vh;
-            color: #2d1a0e;
+            color: #f5f0e8;
         }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #e67e22; border-radius: 10px; }
+
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #6b3e1c, #8b5a2b);
-            color: white;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+            border-bottom: 2px solid #e67e22;
             padding: 25px 20px;
             text-align: center;
-            border-radius: 0 0 35px 35px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .header h1 { font-size: 2rem; letter-spacing: -0.5px; }
-        .header p { opacity: 0.9; margin-top: 5px; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        .section-title {
-            font-size: 1.6rem;
-            margin: 25px 0 15px;
-            color: #6b3e1c;
-            border-left: 5px solid #e67e22;
-            padding-left: 15px;
-        }
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .menu-card {
-            background: white;
-            border-radius: 30px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 1px solid rgba(230,126,34,0.2);
         }
-        .menu-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(0,0,0,0.12); }
-        .menu-img {
-            height: 160px;
-            background: linear-gradient(145deg, #e8d5b5, #d4b896);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(230,126,34,0.08) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
         }
-        .menu-info { padding: 18px; text-align: center; }
-        .menu-info h3 { font-size: 1.4rem; color: #3e2a1f; }
-        .price { font-size: 1.7rem; font-weight: bold; color: #e67e22; margin: 10px 0; }
-        .order-btn, .book-btn {
-            background: #e67e22;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .order-btn:hover, .book-btn:hover { background: #d35400; }
-        .form-card {
-            background: white;
-            border-radius: 35px;
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+        .header h1 { 
+            font-size: 2rem; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
         }
-        .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .form-row input, .form-row select, .form-row textarea {
-            flex: 1;
-            padding: 14px 18px;
-            border: 1px solid #e2d4c4;
-            border-radius: 50px;
-            font-size: 1rem;
-            background: #fefbf5;
-        }
-        textarea { border-radius: 25px !important; resize: vertical; }
-        .submit-btn {
-            background: #27ae60;
-            width: 100%;
-            padding: 14px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+        .header p { opacity: 0.7; margin-top: 8px; font-size: 0.9rem; position: relative; z-index: 1; }
+        
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Tabs */
         .tabs {
             display: flex;
             gap: 12px;
-            margin: 20px 0;
+            margin: 25px 0 30px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         .tab-btn {
-            background: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            padding: 12px 28px;
+            border-radius: 60px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            color: #ccc;
+            font-size: 0.95rem;
         }
+        .tab-btn:hover { border-color: #e67e22; color: #e67e22; transform: translateY(-2px); }
         .tab-btn.active {
-            background: #6b3e1c;
+            background: linear-gradient(135deg, #e67e22, #d35400);
             color: white;
+            border-color: transparent;
+            box-shadow: 0 6px 20px rgba(230,126,34,0.3);
         }
-        .tab-pane { display: none; }
+        
+        /* Section title */
+        .section-title {
+            font-size: 1.6rem;
+            margin: 20px 0 25px;
+            color: #e67e22;
+            border-left: 4px solid #e67e22;
+            padding-left: 18px;
+            font-weight: 600;
+        }
+        
+        /* Menu grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 25px;
+        }
+        .menu-card {
+            background: #141414;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid #2a2a2a;
+            cursor: pointer;
+        }
+        .menu-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #e67e22;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(230,126,34,0.3);
+        }
+        .menu-img {
+            height: 170px;
+            background: linear-gradient(145deg, #1f1f1f, #121212);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .menu-info { padding: 20px; text-align: center; }
+        .menu-info h3 { font-size: 1.4rem; color: #f5f0e8; margin-bottom: 6px; }
+        .price { 
+            font-size: 1.6rem; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 12px 0;
+        }
+        .order-btn {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        .order-btn:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(230,126,34,0.4); }
+        
+        /* Form cards */
+        .form-card {
+            background: #141414;
+            border-radius: 32px;
+            padding: 28px;
+            border: 1px solid #2a2a2a;
+            transition: 0.3s;
+        }
+        .form-card:hover { border-color: #e67e22; }
+        .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 18px; }
+        .form-row input, .form-row select, .form-row textarea {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid #2a2a2a;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background: #0d0d0d;
+            color: #f5f0e8;
+            transition: 0.2s;
+        }
+        .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+            outline: none;
+            border-color: #e67e22;
+            box-shadow: 0 0 0 2px rgba(230,126,34,0.2);
+        }
+        .form-row input::placeholder, .form-row textarea::placeholder { color: #555; }
+        textarea { border-radius: 25px !important; resize: vertical; }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .submit-btn:hover { transform: scale(1.01); box-shadow: 0 4px 15px rgba(39,174,96,0.3); }
+        
+        .tab-pane { display: none; animation: fadeIn 0.4s ease; }
         .tab-pane.active-tab { display: block; }
-        footer { text-align: center; padding: 30px; color: #a68a6a; font-size: 0.8rem; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        footer { text-align: center; padding: 35px; color: #444; font-size: 0.75rem; border-top: 1px solid #1f1f1f; margin-top: 40px; }
+        
         .message {
             padding: 12px;
             border-radius: 50px;
             margin-top: 15px;
             display: none;
             text-align: center;
+            font-weight: 500;
         }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
+        .success { background: rgba(39,174,96,0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .error { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+        
+        /* Admin token qismi */
+        .token-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #2a2a2a;
+        }
+        .token-input {
+            background: #0d0d0d;
+            border: 1px solid #2a2a2a;
+            border-radius: 50px;
+            padding: 12px 18px;
+            width: 100%;
+            color: #f5f0e8;
+            margin-bottom: 12px;
+        }
+        .token-btn {
+            background: #2c3e50;
+            width: auto;
+            padding: 10px 24px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        
         @media (max-width: 600px) {
             .header h1 { font-size: 1.5rem; }
             .section-title { font-size: 1.3rem; }
             .form-row { flex-direction: column; }
+            .tab-btn { padding: 8px 18px; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 <div class="header">
-    <h1>🍽️ Oshxona Restoran</h1>
-    <p>Mazali taomlar | Issiq muhit | Tez yetkazib berish</p>
+    <h1>🍽️ Kafe & Ресторан</h1>
+    <p>Табигый даам | Жылуу маанай | Тез жеткирүү</p>
 </div>
 <div class="container">
-    <!-- Tab menyusi -->
     <div class="tabs">
-        <button class="tab-btn active" data-tab="menu-tab">📋 Menyu</button>
-        <button class="tab-btn" data-tab="order-tab">🛍️ Buyurtma</button>
-        <button class="tab-btn" data-tab="reserve-tab">🪑 Stol band qilish</button>
+        <button class="tab-btn active" data-tab="menu-tab">📋 Меню</button>
+        <button class="tab-btn" data-tab="order-tab">🚚 Заказ берүү</button>
+        <button class="tab-btn" data-tab="reserve-tab">🪑 Стол заказдоо</button>
     </div>
 
-    <!-- Menyu qismi -->
     <div id="menu-tab" class="tab-pane active-tab">
-        <h2 class="section-title">Bizning menyu</h2>
+        <h2 class="section-title">Биздин меню</h2>
         <div class="menu-grid" id="menuGrid"></div>
     </div>
 
-    <!-- Buyurtma qismi -->
     <div id="order-tab" class="tab-pane">
-        <h2 class="section-title">Yetkazib berish orqali buyurtma</h2>
+        <h2 class="section-title">Жеткирүү менен заказ</h2>
         <div class="form-card">
-            <div class="form-row"><input type="text" id="orderName" placeholder="Ismingiz"></div>
-            <div class="form-row"><input type="tel" id="orderPhone" placeholder="Telefon raqam"></div>
+            <div class="form-row"><input type="text" id="orderName" placeholder="Атыңыз"></div>
+            <div class="form-row"><input type="tel" id="orderPhone" placeholder="Телефон номери"></div>
             <div class="form-row"><select id="orderProduct"></select></div>
-            <div class="form-row"><input type="number" id="orderQty" placeholder="Miqdor" value="1" min="1"></div>
-            <div class="form-row"><textarea id="orderAddress" rows="2" placeholder="Yetkazib berish manzili (ko'cha, uy, kirish)"></textarea></div>
-            <button class="submit-btn" id="submitDeliveryOrder">🚚 Buyurtma berish</button>
+            <div class="form-row"><input type="number" id="orderQty" placeholder="Саны" value="1" min="1"></div>
+            <div class="form-row"><textarea id="orderAddress" rows="2" placeholder="Дарегиңиз (көчөсү, үйү, кире бериши)"></textarea></div>
+            <button class="submit-btn" id="submitDeliveryOrder">📦 Заказ берүү</button>
             <div id="orderMessage" class="message"></div>
         </div>
     </div>
 
-    <!-- Stol band qilish -->
     <div id="reserve-tab" class="tab-pane">
-        <h2 class="section-title">Restoranda stol band qilish</h2>
+        <h2 class="section-title">Стол заказдоо</h2>
         <div class="form-card">
-            <div class="form-row"><input type="text" id="reserveName" placeholder="Ismingiz"></div>
-            <div class="form-row"><input type="tel" id="reservePhone" placeholder="Telefon raqam"></div>
+            <div class="form-row"><input type="text" id="reserveName" placeholder="Атыңыз"></div>
+            <div class="form-row"><input type="tel" id="reservePhone" placeholder="Телефон номери"></div>
             <div class="form-row"><input type="date" id="reserveDate"></div>
             <div class="form-row"><input type="time" id="reserveTime"></div>
-            <div class="form-row"><input type="number" id="reserveTable" placeholder="Stol raqami (masalan: 5)"></div>
-            <div class="form-row"><input type="number" id="reserveGuests" placeholder="Kishilar soni" min="1"></div>
-            <button class="submit-btn" id="submitReserve">✅ Stol band qilish</button>
+            <div class="form-row"><input type="number" id="reserveTable" placeholder="Стол номери (мисалы: 5)"></div>
+            <div class="form-row"><input type="number" id="reserveGuests" placeholder="Адам саны" min="1"></div>
+            <button class="submit-btn" id="submitReserve">✅ Стол заказдоо</button>
             <div id="reserveMessage" class="message"></div>
         </div>
     </div>
-    <footer>© 2025 | Barcha huquqlar himoyalangan</footer>
+    
+    <!-- Admin token sozlamalari (faqat admin biladi) -->
+    <div class="token-section">
+        <input type="password" id="githubToken" class="token-input" placeholder="GitHub Token (админ үчүн)">
+        <button id="saveTokenBtn" class="token-btn submit-btn" style="width: auto; background: #e67e22;">💾 Токенди сактоо</button>
+    </div>
+    
+    <footer>© 2025 | Бардык укуктар корголгон</footer>
 </div>
+
 <script>
-    // ====================== SOZLAMALAR ======================
+    // ====================== КОНФИГУРАЦИЯ ======================
     const REPO_OWNER = "ilmyolida";
     const REPO_NAME = "Restaurants";
     const FILE_ORDERS = "orders.json";
+    const BOT_TOKEN = "8863904509:AAFCnx-finHBwgL5RaglmLrsOVI_X2_np8I";
+    const CHAT_ID = "6360110232";
+    
     let menu = [];
     let githubToken = localStorage.getItem("github_token") || "";
 
+    // ====================== GITHUB ФУНКЦИЯЛАРЫ ======================
     async function fetchJSON(filename) {
         const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${filename}`;
-        try { const res = await fetch(url); if (!res.ok) return []; return await res.json(); } catch(e) { return []; }
+        try { 
+            const res = await fetch(url); 
+            if (!res.ok) return []; 
+            return await res.json(); 
+        } catch(e) { return []; }
     }
+
     async function saveOrder(orderData) {
-        if (!githubToken) { showMsg("orderMessage", "❌ Tizimda xatolik, keyinroq urinib ko'ring", "error"); return false; }
+        if (!githubToken) { 
+            showMsg("orderMessage", "❌ GitHub токен киргизиңиз! (админ бөлүмүнө)", "error"); 
+            return false; 
+        }
         const existing = await fetchJSON(FILE_ORDERS);
         const newOrders = Array.isArray(existing) ? [...existing, orderData] : [orderData];
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_ORDERS}`;
@@ -206,44 +324,121 @@
             if (res.ok) { const file = await res.json(); sha = file.sha; }
         } catch(e) {}
         const content = btoa(unescape(encodeURIComponent(JSON.stringify(newOrders, null, 2))));
-        const body = JSON.stringify({ message: `New order`, content, sha });
-        const res = await fetch(url, { method: "PUT", headers: { Authorization: `token ${githubToken}`, "Content-Type": "application/json" }, body });
-        return res.ok;
+        const body = JSON.stringify({ message: `New order ${orderData.id}`, content, sha });
+        const res = await fetch(url, { 
+            method: "PUT", 
+            headers: { 
+                Authorization: `token ${githubToken}`, 
+                "Content-Type": "application/json" 
+            }, 
+            body: body 
+        });
+        
+        if (res.ok) {
+            await sendTelegram(orderData);
+            return true;
+        }
+        return false;
     }
+
+    // ====================== TELEGRAM ХАБАР ЖИБЕРҮҮ ======================
+    async function sendTelegram(order) {
+        let msg = "";
+        if (order.type === "delivery") {
+            msg = `🆕 ЯНГЫ ЗАКАЗ!\n━━━━━━━━━━━━━━━\n👤 Аты: ${order.name}\n📞 Тел: ${order.phone}\n🍽 Тамак: ${order.product}\n🔢 Саны: ${order.qty}\n💰 Жалпы: ${order.total} сом\n📍 Дареги: ${order.address}\n━━━━━━━━━━━━━━━\n⏰ ${new Date().toLocaleString()}`;
+        } else if (order.type === "reserve") {
+            msg = `🆕 СТОЛ ЗАКАЗДОО!\n━━━━━━━━━━━━━━━\n👤 Аты: ${order.name}\n📞 Тел: ${order.phone}\n🪑 Стол: №${order.table}\n👥 Адам саны: ${order.guests}\n📅 Күнү: ${order.dateTime}\n━━━━━━━━━━━━━━━\n⏰ ${new Date().toLocaleString()}`;
+        }
+        try {
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: "HTML" })
+            });
+        } catch(e) { console.log("Telegram катасы:", e); }
+    }
+
     function showMsg(elId, text, type) {
         const el = document.getElementById(elId);
-        if (el) { el.innerText = text; el.className = `message ${type}`; el.style.display = "block"; setTimeout(() => el.style.display = "none", 5000); }
+        if (el) { 
+            el.innerText = text; 
+            el.className = `message ${type}`; 
+            el.style.display = "block"; 
+            setTimeout(() => el.style.display = "none", 5000); 
+        }
     }
+
+    // ====================== МЕНЮНУ ЖҮКТӨӨ ======================
     async function loadMenu() {
         const data = await fetchJSON("menu.json");
         if (data.length) menu = data;
-        else menu = [{ name: "Бешбармак", price: 300, icon: "🍲" }, { name: "Манты", price: 250, icon: "🥟" }, { name: "Лагман", price: 220, icon: "🍜" }];
+        else menu = [
+            { name: "Бешбармак", price: 300, icon: "🍲", desc: "Классикалык кыргыз тамагы" },
+            { name: "Манты", price: 250, icon: "🥟", desc: "Бууга бышырылган" },
+            { name: "Лагман", price: 220, icon: "🍜", desc: "Колго согулган кесме" },
+            { name: "Куурдак", price: 350, icon: "🍖", desc: "Козу эти менен" }
+        ];
         const grid = document.getElementById("menuGrid");
         const select = document.getElementById("orderProduct");
-        grid.innerHTML = ""; select.innerHTML = "";
+        grid.innerHTML = ""; 
+        select.innerHTML = "";
         menu.forEach((item, idx) => {
-            grid.innerHTML += `<div class="menu-card"><div class="menu-img">${item.icon || "🍽️"}</div><div class="menu-info"><h3>${item.name}</h3><div class="price">${item.price} сом</div><button class="order-btn" onclick="quickOrder(${idx})">🛒 Buyurtma</button></div></div>`;
+            grid.innerHTML += `
+                <div class="menu-card" onclick="quickOrder(${idx})">
+                    <div class="menu-img">${item.icon || "🍽️"}</div>
+                    <div class="menu-info">
+                        <h3>${item.name}</h3>
+                        <div class="price">${item.price} сом</div>
+                        <button class="order-btn">🛒 Заказ берүү</button>
+                    </div>
+                </div>`;
             select.innerHTML += `<option value="${idx}">${item.name} - ${item.price} сом</option>`;
         });
     }
+
     window.quickOrder = function(idx) {
         document.querySelector('[data-tab="order-tab"]').click();
         document.getElementById("orderProduct").value = idx;
         document.getElementById("orderQty").value = 1;
         window.scrollTo({ top: document.getElementById("order-tab").offsetTop, behavior: "smooth" });
     };
+
+    // ====================== ЗАКАЗ БЕРҮҮ ======================
     document.getElementById("submitDeliveryOrder").onclick = async () => {
         const name = document.getElementById("orderName").value.trim();
         const phone = document.getElementById("orderPhone").value.trim();
         const productIdx = parseInt(document.getElementById("orderProduct").value);
         const qty = parseInt(document.getElementById("orderQty").value);
         const address = document.getElementById("orderAddress").value.trim();
-        if (!name || !phone || !address) { showMsg("orderMessage", "Ism, telefon va manzilni kiriting!", "error"); return; }
+        if (!name || !phone || !address) { 
+            showMsg("orderMessage", "Атыңызды, телефонуңузду жана дарегиңизди жазыңыз!", "error"); 
+            return; 
+        }
         const item = menu[productIdx];
-        const order = { id: Date.now(), type: "delivery", date: new Date().toISOString(), name, phone, product: item.name, qty, price: item.price, total: item.price * qty, address, status: "new" };
-        if (await saveOrder(order)) { showMsg("orderMessage", "✅ Buyurtma qabul qilindi!", "success"); document.getElementById("orderName").value = ""; document.getElementById("orderPhone").value = ""; document.getElementById("orderAddress").value = ""; document.getElementById("orderQty").value = "1"; }
-        else showMsg("orderMessage", "❌ Xatolik", "error");
+        if (!item) { showMsg("orderMessage", "Тамак табылган жок", "error"); return; }
+        const order = { 
+            id: Date.now(), 
+            type: "delivery", 
+            date: new Date().toISOString(), 
+            name, phone, 
+            product: item.name, 
+            qty, 
+            price: item.price, 
+            total: item.price * qty, 
+            address, 
+            status: "new" 
+        };
+        if (await saveOrder(order)) { 
+            showMsg("orderMessage", "✅ Заказ кабыл алынды! Сиз менен байланышабыз.", "success"); 
+            document.getElementById("orderName").value = ""; 
+            document.getElementById("orderPhone").value = ""; 
+            document.getElementById("orderAddress").value = ""; 
+            document.getElementById("orderQty").value = "1"; 
+        } else {
+            showMsg("orderMessage", "❌ Ката кетти, кийинчерээк аракет кылыңыз", "error");
+        }
     };
+
     document.getElementById("submitReserve").onclick = async () => {
         const name = document.getElementById("reserveName").value.trim();
         const phone = document.getElementById("reservePhone").value.trim();
@@ -251,14 +446,46 @@
         const time = document.getElementById("reserveTime").value;
         const table = document.getElementById("reserveTable").value;
         const guests = document.getElementById("reserveGuests").value;
-        if (!name || !phone || !date || !time) { showMsg("reserveMessage", "Barcha maydonlarni to'ldiring!", "error"); return; }
-        const reserve = { id: Date.now(), type: "reserve", dateTime: `${date} ${time}`, name, phone, table, guests, status: "new" };
-        if (await saveOrder(reserve)) { showMsg("reserveMessage", "✅ Stol band qilindi!", "success"); document.getElementById("reserveName").value = ""; document.getElementById("reservePhone").value = ""; document.getElementById("reserveDate").value = ""; document.getElementById("reserveTime").value = ""; document.getElementById("reserveTable").value = ""; document.getElementById("reserveGuests").value = ""; }
-        else showMsg("reserveMessage", "❌ Xatolik", "error");
+        if (!name || !phone || !date || !time || !table) { 
+            showMsg("reserveMessage", "Бардык талааларды толтуруңуз!", "error"); 
+            return; 
+        }
+        const reserve = { 
+            id: Date.now(), 
+            type: "reserve", 
+            dateTime: `${date} ${time}`, 
+            name, phone, 
+            table: table, 
+            guests: guests || 1, 
+            status: "new" 
+        };
+        if (await saveOrder(reserve)) { 
+            showMsg("reserveMessage", "✅ Стол заказдалды!", "success"); 
+            document.getElementById("reserveName").value = ""; 
+            document.getElementById("reservePhone").value = ""; 
+            document.getElementById("reserveDate").value = ""; 
+            document.getElementById("reserveTime").value = ""; 
+            document.getElementById("reserveTable").value = ""; 
+            document.getElementById("reserveGuests").value = ""; 
+        } else {
+            showMsg("reserveMessage", "❌ Ката кетти", "error");
+        }
     };
-    document.querySelectorAll(".tab-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active-tab")); document.getElementById(btn.dataset.tab).classList.add("active-tab"); }); });
-    if (localStorage.getItem("github_token")) githubToken = localStorage.getItem("github_token");
-    loadMenu();
-</script>
-</body>
-            </html>
+
+    // ====================== ТОКЕНДИ САКТОО ======================
+    document.getElementById("saveTokenBtn").onclick = () => {
+        const token = document.getElementById("githubToken").value.trim();
+        if (token) {
+            githubToken = token;
+            localStorage.setItem("github_token", token);
+            showMsg("adminMessage", "✅ Токен сакталды!", "success");
+        } else {
+            showMsg("adminMessage", "❌ Токен жазылбады", "error");
+        }
+    };
+    
+    // Кошумча админ билдирүү үчүн элемент жок болсо, убактылуу көрсөтүү
+    function showAdminMsg(text, type) {
+        let el = document.getElementById("adminMessage");
+        if (!el) {
+            const tokenDiv = document.querySelector(".token-sect
