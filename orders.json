@@ -1,22 +1,12 @@
 [
   {
     "date": "2026-06-05",
-    "time": "21:27:35",
+    "time": "21:42:31",
     "customer": "Abdulloh",
     "phone": "+996558310108",
     "product": "Бешбармак",
     "qty": 1,
     "price": 300,
     "total": 300
-  },
-  {
-    "date": "2026-06-05",
-    "time": "21:27:57",
-    "customer": "Abdulloh",
-    "phone": "+996558310108",
-    "product": "Манты",
-    "qty": 1,
-    "price": 250,
-    "total": 250
   }
 ]
