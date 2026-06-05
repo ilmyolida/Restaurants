@@ -3,117 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Kafe Restoran | Premium</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>Restoran | Menyu va Buyurtma</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-            background: linear-gradient(135deg, #fef9f1 0%, #f8f0e4 100%);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(145deg, #fef8ed 0%, #f9efdf 100%);
             min-height: 100vh;
+            color: #2d1a0e;
         }
-        .nav-tabs {
-            display: flex;
-            background: white;
-            border-radius: 50px;
-            margin: 20px auto;
-            max-width: 500px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        .nav-tab {
-            flex: 1;
+        .header {
+            background: linear-gradient(135deg, #6b3e1c, #8b5a2b);
+            color: white;
+            padding: 25px 20px;
             text-align: center;
-            padding: 14px 0;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            background: #f5f0e8;
+            border-radius: 0 0 35px 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 2rem; letter-spacing: -0.5px; }
+        .header p { opacity: 0.9; margin-top: 5px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .section-title {
+            font-size: 1.6rem;
+            margin: 25px 0 15px;
             color: #6b3e1c;
-            border: none;
-            font-size: 1rem;
+            border-left: 5px solid #e67e22;
+            padding-left: 15px;
         }
-        .nav-tab.active { background: #6b3e1c; color: white; }
-        .page { display: none; animation: fadeIn 0.3s ease; }
-        .page.active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; }
-        h1 { text-align: center; color: #6b3e1c; margin: 20px 0; font-size: 1.8rem; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            padding: 25px 15px;
-            border-radius: 28px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        .stat-value { font-size: 2rem; font-weight: 800; color: #e67e22; }
-        .stat-label { font-size: 0.8rem; color: #7f8c8d; margin-top: 8px; }
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }
         .menu-card {
             background: white;
-            border-radius: 28px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transition: 0.3s;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(230,126,34,0.2);
         }
-        .menu-card:hover { transform: translateY(-5px); }
-        .menu-card h3 { color: #2c1810; font-size: 1.4rem; }
-        .price { font-size: 1.5rem; font-weight: bold; color: #e67e22; margin: 12px 0; }
-        .order-btn, .add-btn {
+        .menu-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(0,0,0,0.12); }
+        .menu-img {
+            height: 160px;
+            background: linear-gradient(145deg, #e8d5b5, #d4b896);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .menu-info { padding: 18px; text-align: center; }
+        .menu-info h3 { font-size: 1.4rem; color: #3e2a1f; }
+        .price { font-size: 1.7rem; font-weight: bold; color: #e67e22; margin: 10px 0; }
+        .order-btn, .book-btn {
             background: #e67e22;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
+            border-radius: 50px;
             font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
         }
-        .order-btn:hover, .add-btn:hover { background: #d35400; }
-        .form-card, .admin-card, .login-card {
+        .order-btn:hover, .book-btn:hover { background: #d35400; }
+        .form-card {
             background: white;
-            border-radius: 28px;
+            border-radius: 35px;
             padding: 25px;
             margin-top: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
         }
-        input, select {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border: 1px solid #e0d6cc;
+        .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .form-row input, .form-row select, .form-row textarea {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid #e2d4c4;
             border-radius: 50px;
             font-size: 1rem;
-            background: #fefaf5;
+            background: #fefbf5;
         }
-        button.submit {
-            background: #6b3e1c;
+        textarea { border-radius: 25px !important; resize: vertical; }
+        .submit-btn {
+            background: #27ae60;
             width: 100%;
             padding: 14px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: white;
             border: none;
             cursor: pointer;
         }
-        .chart-container {
-            background: white;
-            border-radius: 28px;
-            padding: 20px;
+        .tabs {
+            display: flex;
+            gap: 12px;
             margin: 20px 0;
+            flex-wrap: wrap;
         }
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tab-btn.active {
+            background: #6b3e1c;
+            color: white;
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active-tab { display: block; }
+        footer { text-align: center; padding: 30px; color: #a68a6a; font-size: 0.8rem; }
         .message {
             padding: 12px;
             border-radius: 50px;
@@ -123,320 +127,138 @@
         }
         .success { background: #d4edda; color: #155724; }
         .error { background: #f8d7da; color: #721c24; }
-        footer { text-align: center; padding: 30px 0 20px; color: #7f8c8d; font-size: 0.8rem; }
-        .token-input { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
-        .password-box { text-align: center; max-width: 350px; margin: 50px auto; }
-        @media (max-width: 600px) { .stat-value { font-size: 1.4rem; } }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.5rem; }
+            .section-title { font-size: 1.3rem; }
+            .form-row { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
-
+<div class="header">
+    <h1>🍽️ Oshxona Restoran</h1>
+    <p>Mazali taomlar | Issiq muhit | Tez yetkazib berish</p>
+</div>
 <div class="container">
-    <h1>🍽️ Kafe Restoran Premium</h1>
-
-    <!-- Parol so'rovchi ekran (faqat admin qismlar uchun) -->
-    <div id="loginOverlay" class="login-card password-box" style="display: none;">
-        <h3>🔐 Admin kirish</h3>
-        <input type="password" id="adminPassword" placeholder="Parolni kiriting">
-        <button class="submit" id="loginBtn">Kirish</button>
-        <div id="loginMessage" class="message"></div>
+    <!-- Tab menyusi -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="menu-tab">📋 Menyu</button>
+        <button class="tab-btn" data-tab="order-tab">🛍️ Buyurtma</button>
+        <button class="tab-btn" data-tab="reserve-tab">🪑 Stol band qilish</button>
     </div>
 
-    <!-- Asosiy navigatsiya (faqat menyu uchun avval ko'rinadi) -->
-    <div class="nav-tabs" id="navTabs">
-        <button class="nav-tab active" data-page="menu">📋 Menyu & Buyurtma</button>
-        <button class="nav-tab admin-only" data-page="report" style="display:none;">📊 Hisobot</button>
-        <button class="nav-tab admin-only" data-page="admin" style="display:none;">⚙️ Admin panel</button>
-    </div>
-
-    <!-- Sahifa 1: Menyu va buyurtma (hamma ko'radi) -->
-    <div id="menuPage" class="page active-page">
+    <!-- Menyu qismi -->
+    <div id="menu-tab" class="tab-pane active-tab">
+        <h2 class="section-title">Bizning menyu</h2>
         <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- Buyurtma qismi -->
+    <div id="order-tab" class="tab-pane">
+        <h2 class="section-title">Yetkazib berish orqali buyurtma</h2>
         <div class="form-card">
-            <h3 style="margin-bottom: 15px;">📝 Buyurtma berish</h3>
-            <input type="text" id="customerName" placeholder="Ismingiz" required>
-            <input type="tel" id="customerPhone" placeholder="Telefon raqam" required>
-            <select id="productSelect"></select>
-            <input type="number" id="quantity" placeholder="Miqdor" value="1" min="1">
-            <button class="submit" id="submitOrder">✅ Buyurtma berish</button>
+            <div class="form-row"><input type="text" id="orderName" placeholder="Ismingiz"></div>
+            <div class="form-row"><input type="tel" id="orderPhone" placeholder="Telefon raqam"></div>
+            <div class="form-row"><select id="orderProduct"></select></div>
+            <div class="form-row"><input type="number" id="orderQty" placeholder="Miqdor" value="1" min="1"></div>
+            <div class="form-row"><textarea id="orderAddress" rows="2" placeholder="Yetkazib berish manzili (ko'cha, uy, kirish)"></textarea></div>
+            <button class="submit-btn" id="submitDeliveryOrder">🚚 Buyurtma berish</button>
             <div id="orderMessage" class="message"></div>
         </div>
     </div>
 
-    <!-- Sahifa 2: Hisobot (faqat paroldan keyin) -->
-    <div id="reportPage" class="page">
-        <div class="stats-grid" id="statsGrid"></div>
-        <div class="chart-container">
-            <canvas id="salesChart"></canvas>
-        </div>
-        <div style="text-align: center; padding: 10px; color: #e67e22;">📌 Buyurtmalar GitHub'dagi orders.json faylida saqlanadi</div>
-    </div>
-
-    <!-- Sahifa 3: Admin panel (faqat paroldan keyin) -->
-    <div id="adminPage" class="page">
-        <div class="admin-card">
-            <h3>🔧 Menyuga taom qo‘shish</h3>
-            <input type="text" id="newFoodName" placeholder="Taom nomi">
-            <input type="number" id="newFoodPrice" placeholder="Narxi (som)">
-            <input type="text" id="newFoodDesc" placeholder="Tavsif (ixtiyoriy)">
-            <button class="add-btn" id="addFoodBtn">➕ Taom qo‘shish</button>
-            <div id="adminMessage" class="message"></div>
-            <div class="token-input">
-                <p>🔐 GitHub Token (admin uchun)</p>
-                <input type="password" id="githubToken" placeholder="GitHub Personal Access Token">
-                <button class="add-btn" id="saveTokenBtn">💾 Token saqlash</button>
-            </div>
+    <!-- Stol band qilish -->
+    <div id="reserve-tab" class="tab-pane">
+        <h2 class="section-title">Restoranda stol band qilish</h2>
+        <div class="form-card">
+            <div class="form-row"><input type="text" id="reserveName" placeholder="Ismingiz"></div>
+            <div class="form-row"><input type="tel" id="reservePhone" placeholder="Telefon raqam"></div>
+            <div class="form-row"><input type="date" id="reserveDate"></div>
+            <div class="form-row"><input type="time" id="reserveTime"></div>
+            <div class="form-row"><input type="number" id="reserveTable" placeholder="Stol raqami (masalan: 5)"></div>
+            <div class="form-row"><input type="number" id="reserveGuests" placeholder="Kishilar soni" min="1"></div>
+            <button class="submit-btn" id="submitReserve">✅ Stol band qilish</button>
+            <div id="reserveMessage" class="message"></div>
         </div>
     </div>
-
-    <footer><p>© 2025 | Barcha huquqlar himoyalangan</p></footer>
+    <footer>© 2025 | Barcha huquqlar himoyalangan</footer>
 </div>
-
 <script>
     // ====================== SOZLAMALAR ======================
-    const ADMIN_PASSWORD = "kafe2025";  // 🔐 Parolni shu yerga yozing
     const REPO_OWNER = "ilmyolida";
     const REPO_NAME = "Restaurants";
-    const FILE_PATH_MENU = "menu.json";
-    const FILE_PATH_ORDERS = "orders.json";
-
+    const FILE_ORDERS = "orders.json";
     let menu = [];
-    let orders = [];
     let githubToken = localStorage.getItem("github_token") || "";
-    let chart;
-    let isAdminLoggedIn = false;
 
-    // ====================== GITHUB FUNKSIYALARI ======================
     async function fetchJSON(filename) {
         const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${filename}`;
-        try {
-            const res = await fetch(url);
-            if (!res.ok) return [];
-            return await res.json();
-        } catch(e) { return []; }
+        try { const res = await fetch(url); if (!res.ok) return []; return await res.json(); } catch(e) { return []; }
     }
-
-    async function saveJSON(filename, data) {
-        if (!githubToken) { showMsg("adminMessage", "❌ Token kiriting!", "error"); return false; }
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filename}`;
+    async function saveOrder(orderData) {
+        if (!githubToken) { showMsg("orderMessage", "❌ Tizimda xatolik, keyinroq urinib ko'ring", "error"); return false; }
+        const existing = await fetchJSON(FILE_ORDERS);
+        const newOrders = Array.isArray(existing) ? [...existing, orderData] : [orderData];
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_ORDERS}`;
         let sha = "";
         try {
             const res = await fetch(url, { headers: { Authorization: `token ${githubToken}` } });
             if (res.ok) { const file = await res.json(); sha = file.sha; }
         } catch(e) {}
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-        const body = JSON.stringify({ message: `Update ${filename}`, content, sha });
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(newOrders, null, 2))));
+        const body = JSON.stringify({ message: `New order`, content, sha });
         const res = await fetch(url, { method: "PUT", headers: { Authorization: `token ${githubToken}`, "Content-Type": "application/json" }, body });
         return res.ok;
     }
-
-    // ====================== HISOBOT ======================
-    function calculateStats() {
-        const totalSum = orders.reduce((sum, o) => sum + (o.price * o.qty), 0);
-        const orderCount = orders.length;
-        const avgCheck = orderCount ? totalSum / orderCount : 0;
-        const productQty = {};
-        const productRevenue = {};
-        orders.forEach(o => {
-            productQty[o.product] = (productQty[o.product] || 0) + o.qty;
-            productRevenue[o.product] = (productRevenue[o.product] || 0) + (o.price * o.qty);
-        });
-        let topProduct = Object.keys(productQty).length ? Object.keys(productQty).reduce((a,b) => productQty[a] > productQty[b] ? a : b) : "-";
-        let topRevenue = Object.keys(productRevenue).length ? Object.keys(productRevenue).reduce((a,b) => productRevenue[a] > productRevenue[b] ? a : b) : "-";
-        return { totalSum, orderCount, avgCheck, topProduct, topRevenue };
+    function showMsg(elId, text, type) {
+        const el = document.getElementById(elId);
+        if (el) { el.innerText = text; el.className = `message ${type}`; el.style.display = "block"; setTimeout(() => el.style.display = "none", 5000); }
     }
-
-    function getDailySales() {
-        const daily = {};
-        orders.forEach(o => { daily[o.date] = (daily[o.date] || 0) + (o.price * o.qty); });
-        return daily;
-    }
-
-    function updateReportUI() {
-        const stats = calculateStats();
-        document.getElementById("statsGrid").innerHTML = `
-            <div class="stat-card"><div class="stat-value">${stats.totalSum.toLocaleString()} сом</div><div class="stat-label">Umumiy savdo</div></div>
-            <div class="stat-card"><div class="stat-value">${stats.orderCount}</div><div class="stat-label">Buyurtmalar soni</div></div>
-            <div class="stat-card"><div class="stat-value">${Math.round(stats.avgCheck).toLocaleString()} сом</div><div class="stat-label">O‘rtacha chek</div></div>
-            <div class="stat-card"><div class="stat-value">${stats.topProduct}</div><div class="stat-label">Eng ko‘p sotilgan</div></div>
-            <div class="stat-card"><div class="stat-value">${stats.topRevenue}</div><div class="stat-label">Eng daromadli</div></div>
-        `;
-        const daily = getDailySales();
-        const dates = Object.keys(daily).sort();
-        const amounts = dates.map(d => daily[d]);
-        if (chart) chart.destroy();
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: dates, datasets: [{ label: 'Kunlik savdo (som)', data: amounts, backgroundColor: '#e67e22', borderRadius: 10 }] },
-            options: { responsive: true, maintainAspectRatio: true }
-        });
-    }
-
-    function updateMenuUI() {
-        const menuGrid = document.getElementById("menuGrid");
-        menuGrid.innerHTML = "";
+    async function loadMenu() {
+        const data = await fetchJSON("menu.json");
+        if (data.length) menu = data;
+        else menu = [{ name: "Бешбармак", price: 300, icon: "🍲" }, { name: "Манты", price: 250, icon: "🥟" }, { name: "Лагман", price: 220, icon: "🍜" }];
+        const grid = document.getElementById("menuGrid");
+        const select = document.getElementById("orderProduct");
+        grid.innerHTML = ""; select.innerHTML = "";
         menu.forEach((item, idx) => {
-            menuGrid.innerHTML += `
-                <div class="menu-card">
-                    <h3>${item.name}</h3>
-                    <div class="price">${item.price} сом</div>
-                    <div class="desc">${item.desc || "Mazali taom"}</div>
-                    <button class="order-btn" onclick="selectProduct(${idx})">🛒 Buyurtma</button>
-                </div>
-            `;
-        });
-        const select = document.getElementById("productSelect");
-        select.innerHTML = "";
-        menu.forEach((item, idx) => {
-            select.innerHTML += `<option value="${idx}" data-price="${item.price}">${item.name} - ${item.price} сом</option>`;
+            grid.innerHTML += `<div class="menu-card"><div class="menu-img">${item.icon || "🍽️"}</div><div class="menu-info"><h3>${item.name}</h3><div class="price">${item.price} сом</div><button class="order-btn" onclick="quickOrder(${idx})">🛒 Buyurtma</button></div></div>`;
+            select.innerHTML += `<option value="${idx}">${item.name} - ${item.price} сом</option>`;
         });
     }
-
-    window.selectProduct = function(idx) {
-        document.getElementById("productSelect").value = idx;
-        document.getElementById("quantity").value = 1;
-        document.getElementById("menuPage").scrollIntoView({ behavior: "smooth" });
+    window.quickOrder = function(idx) {
+        document.querySelector('[data-tab="order-tab"]').click();
+        document.getElementById("orderProduct").value = idx;
+        document.getElementById("orderQty").value = 1;
+        window.scrollTo({ top: document.getElementById("order-tab").offsetTop, behavior: "smooth" });
     };
-
-    // ====================== BUYURTMA QO'SHISH ======================
-    async function addOrder(name, phone, productIdx, qty) {
-        if (!githubToken) { showMsg("orderMessage", "❌ Admin token o‘rnatmagan!", "error"); return false; }
+    document.getElementById("submitDeliveryOrder").onclick = async () => {
+        const name = document.getElementById("orderName").value.trim();
+        const phone = document.getElementById("orderPhone").value.trim();
+        const productIdx = parseInt(document.getElementById("orderProduct").value);
+        const qty = parseInt(document.getElementById("orderQty").value);
+        const address = document.getElementById("orderAddress").value.trim();
+        if (!name || !phone || !address) { showMsg("orderMessage", "Ism, telefon va manzilni kiriting!", "error"); return; }
         const item = menu[productIdx];
-        if (!item) return false;
-        const newOrder = {
-            date: new Date().toISOString().slice(0,10),
-            time: new Date().toLocaleTimeString(),
-            customer: name,
-            phone: phone,
-            product: item.name,
-            qty: qty,
-            price: item.price,
-            total: item.price * qty
-        };
-        const newOrders = [...orders, newOrder];
-        const saved = await saveJSON(FILE_PATH_ORDERS, newOrders);
-        if (saved) {
-            orders = newOrders;
-            updateMenuUI();
-            if (isAdminLoggedIn) updateReportUI();
-            return true;
-        }
-        return false;
-    }
-
-    async function addMenuItem(name, price, desc) {
-        if (!githubToken) { showMsg("adminMessage", "❌ Token kerak!", "error"); return false; }
-        const newItem = { name, price: parseInt(price), desc: desc || "" };
-        const newMenu = [...menu, newItem];
-        const saved = await saveJSON(FILE_PATH_MENU, newMenu);
-        if (saved) {
-            menu = newMenu;
-            updateMenuUI();
-            if (isAdminLoggedIn) updateReportUI();
-            return true;
-        }
-        return false;
-    }
-
-    function showMsg(elementId, text, type) {
-        const el = document.getElementById(elementId);
-        if (!el) return;
-        el.innerText = text;
-        el.className = `message ${type}`;
-        el.style.display = "block";
-        setTimeout(() => el.style.display = "none", 4000);
-    }
-
-    // ====================== PAROL BILAN KIRISH ======================
-    function showAdminSections() {
-        isAdminLoggedIn = true;
-        document.getElementById("loginOverlay").style.display = "none";
-        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "block");
-        updateReportUI();
-    }
-
-    document.getElementById("loginBtn")?.addEventListener("click", () => {
-        const pwd = document.getElementById("adminPassword").value;
-        if (pwd === ADMIN_PASSWORD) {
-            showAdminSections();
-        } else {
-            showMsg("loginMessage", "❌ Parol xato!", "error");
-        }
-    });
-
-    // ====================== EVENTLAR ======================
-    document.getElementById("submitOrder")?.addEventListener("click", async () => {
-        const name = document.getElementById("customerName").value.trim();
-        const phone = document.getElementById("customerPhone").value.trim();
-        const productIdx = parseInt(document.getElementById("productSelect").value);
-        const qty = parseInt(document.getElementById("quantity").value);
-        if (!name || !phone) { showMsg("orderMessage", "Ism va telefon kiriting!", "error"); return; }
-        if (await addOrder(name, phone, productIdx, qty)) {
-            showMsg("orderMessage", "✅ Buyurtma qabul qilindi!", "success");
-            document.getElementById("customerName").value = "";
-            document.getElementById("customerPhone").value = "";
-            document.getElementById("quantity").value = "1";
-        } else {
-            showMsg("orderMessage", "❌ Xatolik. Admin token o‘rnatmagan.", "error");
-        }
-    });
-
-    document.getElementById("addFoodBtn")?.addEventListener("click", async () => {
-        if (!isAdminLoggedIn) { alert("Avval admin panelga kiring!"); return; }
-        const name = document.getElementById("newFoodName").value.trim();
-        const price = document.getElementById("newFoodPrice").value;
-        const desc = document.getElementById("newFoodDesc").value;
-        if (!name || !price) { showMsg("adminMessage", "❌ Taom nomi va narxini kiriting!", "error"); return; }
-        if (await addMenuItem(name, price, desc)) {
-            showMsg("adminMessage", "✅ Taom qo‘shildi!", "success");
-            document.getElementById("newFoodName").value = "";
-            document.getElementById("newFoodPrice").value = "";
-            document.getElementById("newFoodDesc").value = "";
-        } else {
-            showMsg("adminMessage", "❌ Xatolik. Tokenni tekshiring.", "error");
-        }
-    });
-
-    document.getElementById("saveTokenBtn")?.addEventListener("click", () => {
-        const token = document.getElementById("githubToken").value.trim();
-        if (token) {
-            githubToken = token;
-            localStorage.setItem("github_token", token);
-            showMsg("adminMessage", "✅ Token saqlandi!", "success");
-        } else {
-            showMsg("adminMessage", "❌ Token kiritilmadi!", "error");
-        }
-    });
-
-    // Navigatsiya (faqat menyu avval ko'rinadi)
-    document.querySelectorAll(".nav-tab").forEach(btn => {
-        btn.addEventListener("click", () => {
-            if (!isAdminLoggedIn && btn.classList.contains("admin-only")) {
-                document.getElementById("loginOverlay").style.display = "block";
-                return;
-            }
-            document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            const page = btn.getAttribute("data-page");
-            document.querySelectorAll(".page").forEach(p => p.classList.remove("active-page"));
-            document.getElementById(`${page}Page`).classList.add("active-page");
-        });
-    });
-
-    async function loadData() {
-        const loadedMenu = await fetchJSON(FILE_PATH_MENU);
-        const loadedOrders = await fetchJSON(FILE_PATH_ORDERS);
-        if (loadedMenu.length) menu = loadedMenu;
-        else menu = [{ name: "Бешбармак", price: 300, desc: "Klassik" }, { name: "Манты", price: 250, desc: "Bug‘da" }];
-        if (loadedOrders.length) orders = loadedOrders;
-        else orders = [];
-        updateMenuUI();
-        if (githubToken) document.getElementById("githubToken").value = githubToken;
-        // Avval admin kirgan bo'lsa, hisobotni ko'rsat
-        if (isAdminLoggedIn) updateReportUI();
-    }
-    loadData();
+        const order = { id: Date.now(), type: "delivery", date: new Date().toISOString(), name, phone, product: item.name, qty, price: item.price, total: item.price * qty, address, status: "new" };
+        if (await saveOrder(order)) { showMsg("orderMessage", "✅ Buyurtma qabul qilindi!", "success"); document.getElementById("orderName").value = ""; document.getElementById("orderPhone").value = ""; document.getElementById("orderAddress").value = ""; document.getElementById("orderQty").value = "1"; }
+        else showMsg("orderMessage", "❌ Xatolik", "error");
+    };
+    document.getElementById("submitReserve").onclick = async () => {
+        const name = document.getElementById("reserveName").value.trim();
+        const phone = document.getElementById("reservePhone").value.trim();
+        const date = document.getElementById("reserveDate").value;
+        const time = document.getElementById("reserveTime").value;
+        const table = document.getElementById("reserveTable").value;
+        const guests = document.getElementById("reserveGuests").value;
+        if (!name || !phone || !date || !time) { showMsg("reserveMessage", "Barcha maydonlarni to'ldiring!", "error"); return; }
+        const reserve = { id: Date.now(), type: "reserve", dateTime: `${date} ${time}`, name, phone, table, guests, status: "new" };
+        if (await saveOrder(reserve)) { showMsg("reserveMessage", "✅ Stol band qilindi!", "success"); document.getElementById("reserveName").value = ""; document.getElementById("reservePhone").value = ""; document.getElementById("reserveDate").value = ""; document.getElementById("reserveTime").value = ""; document.getElementById("reserveTable").value = ""; document.getElementById("reserveGuests").value = ""; }
+        else showMsg("reserveMessage", "❌ Xatolik", "error");
+    };
+    document.querySelectorAll(".tab-btn").forEach(btn => { btn.addEventListener("click", () => { document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active-tab")); document.getElementById(btn.dataset.tab).classList.add("active-tab"); }); });
+    if (localStorage.getItem("github_token")) githubToken = localStorage.getItem("github_token");
+    loadMenu();
 </script>
 </body>
-                </html>
+            </html>
