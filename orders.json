@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": 1780675658350,
+    "type": "delivery",
+    "date": "2026-06-05T16:07:38.352Z",
+    "name": "Abdulloh",
+    "phone": "+996558310108",
+    "product": "Манты",
+    "qty": 1,
+    "price": 250,
+    "total": 250,
+    "address": "5chi stol",
+    "status": "new"
+  }
+]
