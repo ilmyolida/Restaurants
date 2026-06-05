@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe | Menyu va Hisobot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff8f0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 30px; }
+        h1 { color: #6b3e1c; }
+        .lang-buttons button { background: #e67e22; color: white; border: none; padding: 8px 16px; margin: 0 5px; border-radius: 20px; cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #e67e22; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 20px; margin-bottom: 30px; }
+        .menu-card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .price { color: #e67e22; font-size: 1.3rem; font-weight: bold; margin: 10px 0; }
+        .order-form { background: white; padding: 20px; border-radius: 20px; margin-bottom: 30px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; }
+        button { background: #6b3e1c; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-size: 1rem; }
+        .admin-section { background: #f0e0c0; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        .admin-section h3 { color: #6b3e1c; margin-bottom: 15px; }
+        .chart-container { background: white; padding: 20px; border-radius: 20px; margin-bottom: 30px; }
+        .message { padding: 10px; border-radius: 10px; margin-top: 10px; display: none; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        footer { text-align: center; color: #7f8c8d; margin-top: 30px; }
+        @media (max-width:600px){ .stat-value { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 id="title">🍽 Kafe Restoran</h1>
+        <div class="lang-buttons">
+            <button onclick="setLang('uz')">O‘zbek</button>
+            <button onclick="setLang('kg')">Кыргызча</button>
+        </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="chart-container"><canvas id="salesChart"></canvas></div>
+    <div class="menu-grid" id="menuGrid"></div>
+
+    <div class="order-form">
+        <h3 id="orderTitle">📝 Buyurtma berish</h3>
+        <input type="text" id="customerName" placeholder="Ismingiz" required>
+        <input type="tel" id="customerPhone" placeholder="Telefon raqam" required>
+        <select id="productSelect"></select>
+        <input type="number" id="quantity" placeholder="Miqdor" value="1" min="1">
+        <button id="submitOrder">✅ Buyurtma berish</button>
+        <div id="orderMessage" class="message"></div>
+    </div>
+
+    <div class="admin-section">
+        <h3 id="adminTitle">🔧 Menyuga taom qo‘shish (Admin)</h3>
+        <input type="text" id="newFoodName" placeholder="Taom nomi">
+        <input type="number" id="newFoodPrice" placeholder="Narxi (som)">
+        <input type="text" id="newFoodDesc" placeholder="Tavsif (ixtiyoriy)">
+        <button id="addFoodBtn">➕ Taom qo‘shish</button>
+        <div id="adminMessage" class="message"></div>
+        <p style="font-size:12px; margin-top:10px;" id="tokenNote">⚠️ GitHub token kerak. Uni quyidagi katakka yozing:</p>
+        <input type="password" id="githubToken" placeholder="GitHub Personal Access Token" style="margin-top:5px;">
+        <button id="saveTokenBtn">💾 Token saqlash</button>
+    </div>
+    <footer><p id="footer">© 2025 | Barcha huquqlar himoyalangan</p></footer>
+</div>
+
+<script>
+    // ====================== SOZLAMALAR ======================
+    // GitHub repoyi ma'lumotlari (o'zingiznikiga o'zgartiring)
+    const REPO_OWNER = "SIZING_ISMINIZ";        // GitHub username
+    const REPO_NAME = "kafe-dashboard";          // Repository nomi
+    const FILE_PATH_MENU = "menu.json";
+    const FILE_PATH_ORDERS = "orders.json";
+
+    let currentLang = "uz";
+    let menu = [];
+    let orders = [];
+    let githubToken = localStorage.getItem("github_token") || "";
+    let chart;
+
+    // Tillar
+    const translations = {
+        uz: {
+            totalSales: "Umumiy savdo", ordersCount: "Buyurtmalar soni", avgCheck: "O‘rtacha chek",
+            topProduct: "Eng ko‘p sotilgan", topRevenue: "Eng daromadli", orderTitle: "📝 Buyurtma berish",
+            adminTitle: "🔧 Menyuga taom qo‘shish (Admin)", footer: "© 2025 | Barcha huquqlar himoyalangan"
+        },
+        kg: {
+            totalSales: "Жалпы сатуу", ordersCount: "Буйрутмалар саны", avgCheck: "Орточо текшерүү",
+            topProduct: "Эң көп сатылган", topRevenue: "Эң кирешелүү", orderTitle: "📝 Заказ берүү",
+            adminTitle: "🔧 Менюга тамак кошуу (Админ)", footer: "© 2025 | Бардык укуктар корголгон"
+        }
+    };
+
+    // ====================== GitHub DAN MA'LUMOTLARNI O'QISH ======================
+    async function fetchJSON(filename) {
+        const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${filename}`;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) return [];
+            return await res.json();
+        } catch(e) { return []; }
+    }
+
+    async function saveJSON(filename, data) {
+        if (!githubToken) { showMsg("adminMessage", "❌ Iltimos, GitHub token kiriting!", "error"); return false; }
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filename}`;
+        // Avval fayl borligini tekshirish
+        let sha = "";
+        try {
+            const res = await fetch(url, { headers: { Authorization: `token ${githubToken}` } });
+            if (res.ok) { const file = await res.json(); sha = file.sha; }
+        } catch(e) {}
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+        const body = JSON.stringify({ message: `Update ${filename}`, content, sha });
+        const res = await fetch(url, { method: "PUT", headers: { Authorization: `token ${githubToken}`, "Content-Type": "application/json" }, body });
+        return res.ok;
+    }
+
+    // ====================== HISOBOT ======================
+    function calculateStats() {
+        const totalSum = orders.reduce((sum, o) => sum + (o.price * o.qty), 0);
+        const orderCount = orders.length;
+        const avgCheck = orderCount ? totalSum / orderCount : 0;
+
+        const productQty = {};
+        const productRevenue = {};
+        orders.forEach(o => {
+            productQty[o.product] = (productQty[o.product] || 0) + o.qty;
+            productRevenue[o.product] = (productRevenue[o.product] || 0) + (o.price * o.qty);
+        });
+        let topProduct = Object.keys(productQty).reduce((a,b) => productQty[a] > productQty[b] ? a : b, "-");
+        let topRevenue = Object.keys(productRevenue).reduce((a,b) => productRevenue[a] > productRevenue[b] ? a : b, "-");
+        return { totalSum, orderCount, avgCheck, topProduct, topRevenue };
+    }
+
+    // Kunlik savdo (grafik uchun)
+    function getDailySales() {
+        const daily = {};
+        orders.forEach(o => {
+            const date = o.date || "2025-06-01";
+            daily[date] = (daily[date] || 0) + (o.price * o.qty);
+        });
+        return daily;
+    }
+
+    // ====================== UI YANGILASH ======================
+    function updateUI() {
+        const stats = calculateStats();
+        const t = translations[currentLang];
+        document.getElementById("stats").innerHTML = `
+            <div class="stat-card"><div class="stat-value">${stats.totalSum.toLocaleString()} сом</div><div>${t.totalSales}</div></div>
+            <div class="stat-card"><div class="stat-value">${stats.orderCount}</div><div>${t.ordersCount}</div></div>
+            <div class="stat-card"><div class="stat-value">${Math.round(stats.avgCheck).toLocaleString()} сом</div><div>${t.avgCheck}</div></div>
+            <div class="stat-card"><div class="stat-value">${stats.topProduct}</div><div>${t.topProduct}</div></div>
+            <div class="stat-card"><div class="stat-value">${stats.topRevenue}</div><div>${t.topRevenue}</div></div>
+        `;
+        document.getElementById("orderTitle").innerText = t.orderTitle;
+        document.getElementById("adminTitle").innerHTML = t.adminTitle;
+        document.getElementById("footer").innerHTML = t.footer;
+
+        // Menyu
+        const menuGrid = document.getElementById("menuGrid");
+        menuGrid.innerHTML = "";
+        menu.forEach((item, idx) => {
+            menuGrid.innerHTML += `
+                <div class="menu-card">
+                    <h3>${item.name}</h3>
+                    <div class="price">${item.price} сом</div>
+                    <p>${item.desc || ""}</p>
+                    <button onclick="selectProduct(${idx})">Buyurtma</button>
+                </div>
+            `;
+        });
+        // Select ni to'ldirish
+        const select = document.getElementById("productSelect");
+        select.innerHTML = "";
+        menu.forEach((item, idx) => {
+            select.innerHTML += `<option value="${idx}">${item.name} - ${item.price} сом</option>`;
+        });
+
+        // Grafik
+        const daily = getDailySales();
+        const dates = Object.keys(daily).sort();
+        const amounts = dates.map(d => daily[d]);
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'bar', data: { labels: dates, datasets: [{ label: 'Savdo (som)', data: amounts, backgroundColor: '#e67e22' }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+
+    function selectProduct(idx) {
+        document.getElementById("productSelect").value = idx;
+        document.getElementById("quantity").value = 1;
+        window.scrollTo({ top: document.querySelector(".order-form").offsetTop, behavior: "smooth" });
+    }
+
+    // ====================== BUYURTMA QO'SHISH ======================
+    async function addOrder(name, phone, productIdx, qty) {
+        if (!githubToken) { showMsg("orderMessage", "❌ Avval GitHub token kiriting!", "error"); return false; }
+        const item = menu[productIdx];
+        if (!item) return false;
+        const newOrder = {
+            date: new Date().toISOString().slice(0,10),
+            time: new Date().toLocaleTimeString(),
+            customer: name,
+            phone: phone,
+            product: item.name,
+            qty: qty,
+            price: item.price,
+            total: item.price * qty
+        };
+        orders.push(newOrder);
+        const saved = await saveJSON(FILE_PATH_ORDERS, orders);
+        if (saved) {
+            updateUI();
+            return true;
+        } else {
+            orders.pop();
+            return false;
+        }
+    }
+
+    // ====================== ADMIN: TAOM QO'SHISH ======================
+    async function addMenuItem(name, price, desc) {
+        if (!githubToken) { showMsg("adminMessage", "❌ GitHub token kiriting!", "error"); return false; }
+        const newItem = { name, price: parseInt(price), desc: desc || "" };
+        menu.push(newItem);
+        const saved = await saveJSON(FILE_PATH_MENU, menu);
+        if (saved) { updateUI(); return true; }
+        else { menu.pop(); return false; }
+    }
+
+    function showMsg(elementId, text, type) {
+        const el = document.getElementById(elementId);
+        el.innerText = text;
+        el.className = `message ${type}`;
+        el.style.display = "block";
+        setTimeout(() => el.style.display = "none", 4000);
+    }
+
+    // ====================== O'RNATISH ======================
+    document.getElementById("submitOrder").onclick = async () => {
+        const name = document.getElementById("customerName").value.trim();
+        const phone = document.getElementById("customerPhone").value.trim();
+        const productIdx = parseInt(document.getElementById("productSelect").value);
+        const qty = parseInt(document.getElementById("quantity").value);
+        if (!name || !phone) { showMsg("orderMessage", "Iltimos ism va telefon kiriting!", "error"); return; }
+        if (await addOrder(name, phone, productIdx, qty)) {
+            showMsg("orderMessage", "✅ Buyurtma qabul qilindi!", "success");
+            document.getElementById("customerName").value = "";
+            document.getElementById("customerPhone").value = "";
+            document.getElementById("quantity").value = "1";
+        } else {
+            showMsg("orderMessage", "❌ Xatolik. Token yoki internetni tekshiring.", "error");
+        }
+    };
+
+    document.getElementById("addFoodBtn").onclick = async () => {
+        const name = document.getElementById("newFoodName").value.trim();
+        const price = document.getElementById("newFoodPrice").value;
+        const desc = document.getElementById("newFoodDesc").value;
+        if (!name || !price) { showMsg("adminMessage", "❌ Taom nomi va narxini kiriting!", "error"); return; }
+        if (await addMenuItem(name, price, desc)) {
+            showMsg("adminMessage", "✅ Taom qo‘shildi!", "success");
+            document.getElementById("newFoodName").value = "";
+            document.getElementById("newFoodPrice").value = "";
+            document.getElementById("newFoodDesc").value = "";
+        } else {
+            showMsg("adminMessage", "❌ Xatolik. Tokenni tekshiring.", "error");
+        }
+    };
+
+    document.getElementById("saveTokenBtn").onclick = () => {
+        const token = document.getElementById("githubToken").value.trim();
+        if (token) {
+            githubToken = token;
+            localStorage.setItem("github_token", token);
+            showMsg("adminMessage", "✅ Token saqlandi!", "success");
+        } else {
+            showMsg("adminMessage", "❌ Token kiritilmadi!", "error");
+        }
+    };
+
+    function setLang(lang) { currentLang = lang; updateUI(); }
+    window.setLang = setLang;
+    window.selectProduct = selectProduct;
+
+    async function loadData() {
+        const loadedMenu = await fetchJSON(FILE_PATH_MENU);
+        const loadedOrders = await fetchJSON(FILE_PATH_ORDERS);
+        if (loadedMenu.length) menu = loadedMenu;
+        else menu = [{ name: "Бешбармак", price: 300, desc: "Классикалык" }, { name: "Манты", price: 250, desc: "Бууга бышырылган" }];
+        if (loadedOrders.length) orders = loadedOrders;
+        else orders = [];
+        updateUI();
+    }
+    loadData();
+
+    if (githubToken) document.getElementById("githubToken").value = githubToken;
+</script>
+</body>
+</html>
