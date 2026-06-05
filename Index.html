@@ -3,167 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Restoran | Меню жана Заказ</title>
+    <title>Restoran | Premium</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --text-primary: #2c3e50;
-            --card-bg: #ffffff;
-            --border-color: #e9ecef;
+            --bg: #0a0a0a;
+            --card: #141414;
+            --border: #2a2a2a;
             --accent: #e67e22;
+            --accent-glow: #d35400;
+            --text: #f5f0e8;
+            --text-muted: #aaa;
         }
-        body.dark {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --text-primary: #f5f0e8;
-            --card-bg: #1a1a1a;
-            --border-color: #2a2a2a;
-        }
+        
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
         }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+            border-bottom: 2px solid var(--accent);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(230,126,34,0.15) 0%, transparent 70%);
+            animation: rotate 25s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--accent), #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        .header p {
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Top bar */
         .top-bar {
             display: flex;
             justify-content: flex-end;
             gap: 12px;
             padding: 12px 20px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
+            background: #0d0d0d;
+            border-bottom: 1px solid var(--border);
         }
         .top-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 30px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 40px;
             cursor: pointer;
-            color: var(--text-primary);
+            color: var(--text);
+            transition: 0.2s;
         }
-        .top-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .header {
-            background: linear-gradient(135deg, var(--accent), #d35400);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
+        .top-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
-        .header h1 { font-size: 2rem; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+        
+        /* Tabs */
         .tabs {
             display: flex;
-            gap: 12px;
-            margin: 20px 0 30px;
+            gap: 15px;
+            margin: 20px 0 35px;
             flex-wrap: wrap;
             justify-content: center;
         }
         .tab-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 12px 28px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 12px 30px;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            color: var(--text-primary);
+            color: var(--text);
+            transition: 0.2s;
         }
         .tab-btn.active {
             background: var(--accent);
+            border-color: var(--accent);
             color: white;
+            box-shadow: 0 0 15px rgba(230,126,34,0.3);
         }
+        
         .section-title {
             font-size: 1.6rem;
-            margin: 20px 0 25px;
+            margin: 25px 0 25px;
             color: var(--accent);
             border-left: 4px solid var(--accent);
-            padding-left: 15px;
+            padding-left: 18px;
         }
+        
+        /* Menu grid - chiroyli kartalar */
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
         }
         .menu-card {
-            background: var(--card-bg);
-            border-radius: 20px;
+            background: var(--card);
+            border-radius: 28px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             cursor: pointer;
-            transition: 0.3s;
         }
-        .menu-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .menu-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(230,126,34,0.2);
+        }
         .menu-img {
-            height: 150px;
-            background: linear-gradient(145deg, #f0e0c0, #e8d5b5);
+            height: 200px;
+            background: linear-gradient(145deg, #1f1f1f, #121212);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
         }
-        body.dark .menu-img { background: linear-gradient(145deg, #2a2a2a, #1f1f1f); }
-        .menu-info { padding: 18px; text-align: center; }
-        .price { font-size: 1.5rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+        .menu-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .menu-img .no-img {
+            font-size: 4rem;
+            opacity: 0.5;
+        }
+        .menu-info {
+            padding: 22px;
+            text-align: center;
+        }
+        .menu-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .menu-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin: 8px 0;
+        }
+        .price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 12px 0;
+        }
         .order-btn {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-        .form-card {
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 25px;
-            border: 1px solid var(--border-color);
-        }
-        .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .form-row input, .form-row select, .form-row textarea {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-        }
-        textarea { border-radius: 20px; }
-        .submit-btn {
-            background: #27ae60;
-            width: 100%;
             padding: 12px;
             border-radius: 50px;
-            font-weight: bold;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .order-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(230,126,34,0.4);
+        }
+        
+        /* Form card */
+        .form-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .form-row input, .form-row select, .form-row textarea {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            background: #0d0d0d;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(230,126,34,0.2);
+        }
+        textarea {
+            border-radius: 25px !important;
+            resize: vertical;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            width: 100%;
+            padding: 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
             color: white;
             border: none;
             cursor: pointer;
+            transition: 0.2s;
         }
+        .submit-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 5px 20px rgba(39,174,96,0.3);
+        }
+        
+        /* Admin panel */
+        .admin-card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            margin-top: 30px;
+        }
+        .admin-card h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .food-item {
+            background: #0d0d0d;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
         .tab-pane { display: none; animation: fade 0.3s; }
         .tab-pane.active-tab { display: block; }
-        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-        footer { text-align: center; padding: 30px; color: #aaa; border-top: 1px solid var(--border-color); margin-top: 40px; }
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 35px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+        
         .message {
-            padding: 10px;
+            padding: 12px;
             border-radius: 50px;
             margin-top: 15px;
             display: none;
             text-align: center;
         }
-        .success { background: rgba(39,174,96,0.2); color: #27ae60; }
-        .error { background: rgba(231,76,60,0.2); color: #e74c3c; }
+        .success { background: rgba(39,174,96,0.2); color: #2ecc71; border: 1px solid #2ecc71; }
+        .error { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+        
+        .note {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-align: center;
+            margin-top: 15px;
+        }
+        
         @media (max-width: 600px) {
             .header h1 { font-size: 1.4rem; }
+            .section-title { font-size: 1.3rem; }
             .tab-btn { padding: 8px 18px; }
             .form-row { flex-direction: column; }
+            .menu-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 <div class="top-bar">
     <button class="top-btn" id="langToggle">🇺🇿 O'zbekcha</button>
-    <button class="top-btn" id="themeToggle">🌙 Dark</button>
+    <button class="top-btn" id="themeToggle">☀️ Light</button>
 </div>
 <div class="header">
     <h1 id="mainTitle">🍽️ Kafe & Ресторан</h1>
@@ -174,118 +325,182 @@
         <button class="tab-btn active" data-tab="menu-tab" id="tabMenu">📋 Меню</button>
         <button class="tab-btn" data-tab="order-tab" id="tabOrder">🚚 Заказ берүү</button>
         <button class="tab-btn" data-tab="reserve-tab" id="tabReserve">🪑 Стол заказдоо</button>
+        <button class="tab-btn" data-tab="admin-tab" id="tabAdmin">⚙️ Админ</button>
     </div>
 
+    <!-- Menyu -->
     <div id="menu-tab" class="tab-pane active-tab">
         <h2 class="section-title" id="menuTitle">Биздин меню</h2>
         <div class="menu-grid" id="menuGrid"></div>
     </div>
 
+    <!-- Buyurtma -->
     <div id="order-tab" class="tab-pane">
         <h2 class="section-title" id="orderTitle">Жеткирүү менен заказ</h2>
         <div class="form-card">
             <div class="form-row"><input type="text" id="orderName" placeholder="Атыңыз"></div>
-            <div class="form-row"><input type="tel" id="orderPhone" placeholder="Телефон номери"></div>
+            <div class="form-row"><input type="text" id="orderUsername" placeholder="Telegram username (@username)"></div>
             <div class="form-row"><select id="orderProduct"></select></div>
             <div class="form-row"><input type="number" id="orderQty" placeholder="Саны" value="1" min="1"></div>
-            <div class="form-row"><textarea id="orderAddress" rows="2" placeholder="Дарегиңиз (көчө, үй, кире бериш)"></textarea></div>
+            <div class="form-row"><textarea id="orderAddress" rows="2" placeholder="Дарегиңиз (көчө, үй)"></textarea></div>
             <button class="submit-btn" id="submitDeliveryOrder">📦 Заказ берүү</button>
+            <div class="note">🤖 @Conversationorderbot бот аркылуу хабар аласыз</div>
             <div id="orderMessage" class="message"></div>
         </div>
     </div>
 
+    <!-- Stol band qilish -->
     <div id="reserve-tab" class="tab-pane">
         <h2 class="section-title" id="reserveTitle">Стол заказдоо</h2>
         <div class="form-card">
             <div class="form-row"><input type="text" id="reserveName" placeholder="Атыңыз"></div>
-            <div class="form-row"><input type="tel" id="reservePhone" placeholder="Телефон номери"></div>
+            <div class="form-row"><input type="text" id="reserveUsername" placeholder="Telegram username (@username)"></div>
             <div class="form-row"><input type="date" id="reserveDate"></div>
             <div class="form-row"><input type="time" id="reserveTime"></div>
             <div class="form-row"><input type="number" id="reserveTable" placeholder="Стол номери"></div>
             <div class="form-row"><input type="number" id="reserveGuests" placeholder="Адам саны" min="1"></div>
             <button class="submit-btn" id="submitReserve">✅ Стол заказдоо</button>
+            <div class="note">🤖 @Conversationorderbot бот аркылуу хабар аласыз</div>
             <div id="reserveMessage" class="message"></div>
         </div>
     </div>
-    <footer>© 2025 | Бардык укуктар корголгон</footer>
+
+    <!-- Admin panel (surat yuklash va taom qo'shish) -->
+    <div id="admin-tab" class="tab-pane">
+        <h2 class="section-title">Админ панели</h2>
+        <div class="admin-card">
+            <h3>➕ Жаңы тамак кошуу</h3>
+            <div class="form-row"><input type="text" id="foodName" placeholder="Тамактын аты"></div>
+            <div class="form-row"><input type="number" id="foodPrice" placeholder="Баасы (сом)"></div>
+            <div class="form-row"><input type="text" id="foodDesc" placeholder="Тавсифи"></div>
+            <div class="form-row"><input type="text" id="foodCategory" placeholder="Категориясы (мис: Ысык тамактар)"></div>
+            <div class="form-row"><input type="text" id="foodImage" placeholder="Сүрөт URL (иштейт)"></div>
+            <button class="submit-btn" id="addFoodBtn" style="background: var(--accent);">➕ Тамак кошуу</button>
+            <div id="adminMsg" class="message"></div>
+        </div>
+        
+        <div class="admin-card" style="margin-top: 20px;">
+            <h3>📋 Учурдагы меню</h3>
+            <div id="foodList"></div>
+            <div class="form-row"><input type="password" id="githubToken" placeholder="GitHub токен (сактоо үчүн)"></div>
+            <button id="saveTokenBtn" class="submit-btn" style="background: #2c3e50;">💾 Токенди сактоо</button>
+        </div>
+    </div>
+    
+    <footer>© 2025 | Бардык укуктар корголгон | <a href="https://t.me/Conversationorderbot" style="color: var(--accent);">🤖 Ботко өтүү</a></footer>
 </div>
 
 <script>
     // ====================== TELEGRAM BOTLAR ======================
-    // Bot 1: Ofitsiantga xabar (Waiterorderbot)
     const WAITER_BOT_TOKEN = "8863904509:AAFCnx-finHBwgL5RaglmLrsOVI_X2_np8I";
     const WAITER_CHAT_ID = "6360110232";
     
-    // Bot 2: Adminga xabar (Conversationorderbot)
-    const ADMIN_BOT_TOKEN = "8844366012:AAEHlQB7x9NbrRE1I36UelsVKr_4ZcWGst4";
-    const ADMIN_CHAT_ID = "6360110232";
-    
-    // Menyu
-    const menu = [
-        { name: "Бешбармак", price: 300, icon: "🍲", desc: "Классикалык кыргыз тамагы" },
-        { name: "Манты", price: 250, icon: "🥟", desc: "Бууга бышырылган" },
-        { name: "Лагман", price: 220, icon: "🍜", desc: "Колго согулган кесме" },
-        { name: "Куурдак", price: 350, icon: "🍖", desc: "Козу эти менен" },
-        { name: "Плов", price: 280, icon: "🍚", desc: "Тойгонго даамдуу" },
-        { name: "Шорпо", price: 180, icon: "🥣", desc: "Ысык сорпо" }
+    // Menyu ma'lumotlari (localStorage da saqlanadi, admin qo'shadi)
+    let menu = JSON.parse(localStorage.getItem("restaurant_menu")) || [
+        { name: "Бешбармак", price: 300, desc: "Классикалык кыргыз тамагы", category: "Ысык тамактар", image: "" },
+        { name: "Манты", price: 250, desc: "Бууга бышырылган", category: "Ысык тамактар", image: "" },
+        { name: "Лагман", price: 220, desc: "Колго согулган кесме", category: "Ысык тамактар", image: "" },
+        { name: "Куурдак", price: 350, desc: "Козу эти менен", category: "Ысык тамактар", image: "" },
+        { name: "Көк чай", price: 50, desc: "Тостон ысык чай", category: "Ичимдиктер", image: "" },
+        { name: "Компот", price: 80, desc: "Үй компоту", category: "Ичимдиктер", image: "" }
     ];
     
     let currentLang = "ky";
-    let currentTheme = localStorage.getItem("theme") || "light";
+    let currentTheme = localStorage.getItem("theme") || "dark";
+    let githubToken = localStorage.getItem("github_token") || "";
     
     const translations = {
         ky: {
             mainTitle: "🍽️ Kafe & Ресторан", subTitle: "Табигый даам | Жылуу маанай | Тез жеткирүү",
-            tabMenu: "📋 Меню", tabOrder: "🚚 Заказ берүү", tabReserve: "🪑 Стол заказдоо",
-            menuTitle: "Биздин меню", orderTitle: "Жеткирүү менен заказ", reserveTitle: "Стол заказдоо",
-            orderBtn: "📦 Заказ берүү", reserveBtn: "✅ Стол заказдоо"
+            tabMenu: "📋 Меню", tabOrder: "🚚 Заказ берүү", tabReserve: "🪑 Стол заказдоо", tabAdmin: "⚙️ Админ",
+            menuTitle: "Биздин меню", orderTitle: "Жеткирүү менен заказ", reserveTitle: "Стол заказдоо"
         },
         uz: {
             mainTitle: "🍽️ Kafe & Restoran", subTitle: "Tabiiy taom | Issiq muhit | Tez yetkazib berish",
-            tabMenu: "📋 Menyu", tabOrder: "🚚 Buyurtma berish", tabReserve: "🪑 Stol band qilish",
-            menuTitle: "Bizning menyu", orderTitle: "Yetkazib berish orqali buyurtma", reserveTitle: "Restoranda stol band qilish",
-            orderBtn: "📦 Buyurtma berish", reserveBtn: "✅ Stol band qilish"
+            tabMenu: "📋 Menyu", tabOrder: "🚚 Buyurtma berish", tabReserve: "🪑 Stol band qilish", tabAdmin: "⚙️ Admin",
+            menuTitle: "Bizning menyu", orderTitle: "Yetkazib berish orqali buyurtma", reserveTitle: "Restoranda stol band qilish"
         }
     };
     
-    function setLanguage(lang) {
-        currentLang = lang;
-        const t = translations[lang];
-        document.getElementById("mainTitle").innerText = t.mainTitle;
-        document.getElementById("subTitle").innerText = t.subTitle;
-        document.getElementById("tabMenu").innerText = t.tabMenu;
-        document.getElementById("tabOrder").innerText = t.tabOrder;
-        document.getElementById("tabReserve").innerText = t.tabReserve;
-        document.getElementById("menuTitle").innerText = t.menuTitle;
-        document.getElementById("orderTitle").innerText = t.orderTitle;
-        document.getElementById("reserveTitle").innerText = t.reserveTitle;
-        document.getElementById("submitDeliveryOrder").innerText = t.orderBtn;
-        document.getElementById("submitReserve").innerText = t.reserveBtn;
-        localStorage.setItem("lang", lang);
+    function saveMenu() {
+        localStorage.setItem("restaurant_menu", JSON.stringify(menu));
     }
     
-    function setTheme(theme) {
-        currentTheme = theme;
-        if (theme === "dark") {
-            document.body.classList.add("dark");
-            document.getElementById("themeToggle").innerHTML = "☀️ Light";
-        } else {
-            document.body.classList.remove("dark");
-            document.getElementById("themeToggle").innerHTML = "🌙 Dark";
+    function renderMenu() {
+        const grid = document.getElementById("menuGrid");
+        const select = document.getElementById("orderProduct");
+        grid.innerHTML = "";
+        select.innerHTML = "";
+        
+        // Kategoriyalar bo'yicha guruhlash
+        const categories = {};
+        menu.forEach(item => {
+            const cat = item.category || "Башка";
+            if (!categories[cat]) categories[cat] = [];
+            categories[cat].push(item);
+        });
+        
+        for (const [cat, items] of Object.entries(categories)) {
+            const catDiv = document.createElement("div");
+            catDiv.style.width = "100%";
+            catDiv.innerHTML = `<h3 style="color: var(--accent); margin: 20px 0 15px 10px;">🍽️ ${cat}</h3><div style="display: contents;"></div>`;
+            grid.appendChild(catDiv);
+            
+            items.forEach((item, idx) => {
+                const globalIdx = menu.findIndex(i => i.name === item.name);
+                grid.innerHTML += `
+                    <div class="menu-card" onclick="quickOrder(${globalIdx})">
+                        <div class="menu-img">
+                            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : `<div class="no-img">🍽️</div>`}
+                        </div>
+                        <div class="menu-info">
+                            <h3>${item.name}</h3>
+                            <div class="menu-desc">${item.desc || ""}</div>
+                            <div class="price">${item.price} сом</div>
+                            <button class="order-btn">🛒 Заказ берүү</button>
+                        </div>
+                    </div>`;
+                select.innerHTML += `<option value="${globalIdx}">${item.name} - ${item.price} сом</option>`;
+            });
         }
-        localStorage.setItem("theme", theme);
     }
     
-    function toggleTheme() { setTheme(currentTheme === "dark" ? "light" : "dark"); }
+    function renderFoodList() {
+        const listDiv = document.getElementById("foodList");
+        listDiv.innerHTML = "";
+        menu.forEach((item, idx) => {
+            listDiv.innerHTML += `
+                <div class="food-item">
+                    <div><strong>${item.name}</strong> - ${item.price} сом<br><small>${item.category || ""}</small></div>
+                    <button onclick="deleteFood(${idx})" style="background: #e74c3c; border: none; padding: 8px 16px; border-radius: 25px; color: white; cursor: pointer;">🗑️ Өчүрүү</button>
+                </div>`;
+        });
+    }
     
-    // Ikkala botga xabar yuborish
+    window.deleteFood = function(idx) {
+        if (confirm("Бул тамакты өчүрүү?")) {
+            menu.splice(idx, 1);
+            saveMenu();
+            renderMenu();
+            renderFoodList();
+        }
+    };
+    
+    window.quickOrder = function(idx) {
+        document.querySelector('[data-tab="order-tab"]').click();
+        document.getElementById("orderProduct").value = idx;
+        document.getElementById("orderQty").value = 1;
+        window.scrollTo({ top: document.getElementById("order-tab").offsetTop, behavior: "smooth" });
+    };
+    
     async function sendToWaiter(order) {
-        let msg = "";
+        let msg = `🆕 ЯНГЫ ЗАКАЗ!\n━━━━━━━━━━━━━━━\n👤 ${order.name}\n🆔 ${order.username}\n`;
         if (order.type === "delivery") {
-            msg = `🆕 ЯНГЫ ЗАКАЗ!\n━━━━━━━━━━━━━━━\n👤 Аты: ${order.name}\n📞 Тел: ${order.phone}\n🍽 Тамак: ${order.product}\n🔢 Саны: ${order.qty}\n💰 Жалпы: ${order.total} сом\n📍 Дареги: ${order.address}\n━━━━━━━━━━━━━━━\n⏰ ${new Date().toLocaleString()}`;
+            msg += `🍽 ${order.product} x${order.qty} = ${order.total} сом\n📍 ${order.address}`;
         } else {
-            msg = `🆕 СТОЛ ЗАКАЗДОО!\n━━━━━━━━━━━━━━━\n👤 Аты: ${order.name}\n📞 Тел: ${order.phone}\n🪑 Стол: №${order.table}\n👥 Адам: ${order.guests}\n📅 Убакыт: ${order.dateTime}\n━━━━━━━━━━━━━━━\n⏰ ${new Date().toLocaleString()}`;
+            msg += `🪑 Стол ${order.table}\n👥 ${order.guests} адам\n📅 ${order.dateTime}`;
         }
+        msg += `\n━━━━━━━━━━━━━━━\n📌 Хабар жөнөтүү: /msg ${order.username.replace('@','')} текстиңиз`;
         try {
             await fetch(`https://api.telegram.org/bot${WAITER_BOT_TOKEN}/sendMessage`, {
                 method: "POST", headers: { "Content-Type": "application/json" },
@@ -295,131 +510,12 @@
         } catch(e) { return false; }
     }
     
-    async function sendToAdmin(order) {
-        let msg = `📊 АДМИНГЕ БИЛДИРҮҮ (Conversationorderbot)\n━━━━━━━━━━━━━━━\n`;
-        if (order.type === "delivery") {
-            msg += `🚚 Жеткирүү заказы\n👤 ${order.name}\n📞 ${order.phone}\n🍽 ${order.product}\n🔢 ${order.qty} тамак\n💰 ${order.total} сом\n📍 ${order.address}`;
-        } else {
-            msg += `🪑 Стол заказдоо\n👤 ${order.name}\n📞 ${order.phone}\n🪑 Стол ${order.table}\n👥 ${order.guests} адам\n📅 ${order.dateTime}`;
-        }
-        msg += `\n━━━━━━━━━━━━━━━\n⏰ ${new Date().toLocaleString()}`;
-        try {
-            await fetch(`https://api.telegram.org/bot${ADMIN_BOT_TOKEN}/sendMessage`, {
-                method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg })
-            });
-        } catch(e) { console.log("Admin bot error:", e); }
-    }
-    
     function showMsg(elId, text, type) {
         const el = document.getElementById(elId);
-        if (el) {
-            el.innerText = text;
-            el.className = `message ${type}`;
-            el.style.display = "block";
-            setTimeout(() => el.style.display = "none", 5000);
-        }
+        if (el) { el.innerText = text; el.className = `message ${type}`; el.style.display = "block"; setTimeout(() => el.style.display = "none", 5000); }
     }
     
-    function loadMenu() {
-        const grid = document.getElementById("menuGrid");
-        const select = document.getElementById("orderProduct");
-        grid.innerHTML = "";
-        select.innerHTML = "";
-        menu.forEach((item, idx) => {
-            grid.innerHTML += `<div class="menu-card" onclick="quickOrder(${idx})"><div class="menu-img">${item.icon}</div><div class="menu-info"><h3>${item.name}</h3><div class="price">${item.price} сом</div><p style="font-size:0.8rem;">${item.desc}</p><button class="order-btn">🛒 Заказ берүү</button></div></div>`;
-            select.innerHTML += `<option value="${idx}">${item.name} - ${item.price} сом</option>`;
-        });
-    }
-    
-    window.quickOrder = function(idx) {
-        document.querySelector('[data-tab="order-tab"]').click();
-        document.getElementById("orderProduct").value = idx;
-        document.getElementById("orderQty").value = 1;
-        window.scrollTo({ top: document.getElementById("order-tab").offsetTop, behavior: "smooth" });
-    };
-    
+    // Eventlar
     document.getElementById("submitDeliveryOrder").onclick = async () => {
         const name = document.getElementById("orderName").value.trim();
-        const phone = document.getElementById("orderPhone").value.trim();
-        const productIdx = parseInt(document.getElementById("orderProduct").value);
-        const qty = parseInt(document.getElementById("orderQty").value);
-        const address = document.getElementById("orderAddress").value.trim();
-        if (!name || !phone || !address) {
-            showMsg("orderMessage", "Бардык талааларды толтуруңуз!", "error");
-            return;
-        }
-        const item = menu[productIdx];
-        const order = {
-            type: "delivery", name, phone, product: item.name,
-            qty: qty, total: item.price * qty, address: address
-        };
-        const sent1 = await sendToWaiter(order);
-        await sendToAdmin(order);
-        if (sent1) {
-            showMsg("orderMessage", "✅ Заказ кабыл алынды!", "success");
-            document.getElementById("orderName").value = "";
-            document.getElementById("orderPhone").value = "";
-            document.getElementById("orderAddress").value = "";
-            document.getElementById("orderQty").value = "1";
-        } else {
-            showMsg("orderMessage", "❌ Ката кетти", "error");
-        }
-    };
-    
-    document.getElementById("submitReserve").onclick = async () => {
-        const name = document.getElementById("reserveName").value.trim();
-        const phone = document.getElementById("reservePhone").value.trim();
-        const date = document.getElementById("reserveDate").value;
-        const time = document.getElementById("reserveTime").value;
-        const table = document.getElementById("reserveTable").value;
-        const guests = document.getElementById("reserveGuests").value;
-        if (!name || !phone || !date || !time || !table) {
-            showMsg("reserveMessage", "Бардык талааларды толтуруңуз!", "error");
-            return;
-        }
-        const order = {
-            type: "reserve", name, phone, table: table,
-            guests: guests || 1, dateTime: `${date} ${time}`
-        };
-        const sent1 = await sendToWaiter(order);
-        await sendToAdmin(order);
-        if (sent1) {
-            showMsg("reserveMessage", "✅ Стол заказдалды!", "success");
-            document.getElementById("reserveName").value = "";
-            document.getElementById("reservePhone").value = "";
-            document.getElementById("reserveDate").value = "";
-            document.getElementById("reserveTime").value = "";
-            document.getElementById("reserveTable").value = "";
-            document.getElementById("reserveGuests").value = "";
-        } else {
-            showMsg("reserveMessage", "❌ Ката кетти", "error");
-        }
-    };
-    
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active-tab"));
-            document.getElementById(btn.dataset.tab).classList.add("active-tab");
-        });
-    });
-    
-    document.getElementById("langToggle").onclick = () => setLanguage(currentLang === "ky" ? "uz" : "ky");
-    document.getElementById("themeToggle").onclick = toggleTheme;
-    
-    const savedLang = localStorage.getItem("lang");
-    if (savedLang) setLanguage(savedLang);
-    else setLanguage("ky");
-    
-    if (currentTheme === "dark") document.body.classList.add("dark");
-    
-    loadMenu();
-    
-    console.log("Tizim ishga tushdi!");
-    console.log("Waiter bot token:", WAITER_BOT_TOKEN);
-    console.log("Admin bot token:", ADMIN_BOT_TOKEN);
-</script>
-</body>
-</html>
+        let usernam
